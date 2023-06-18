@@ -83,7 +83,7 @@ describe("Ride API tests", () => {
 		expect(response.text).toBe("Invalid date");
 	});
 
-	it("should generate empty report", async () => {
+	it("should generate empty daily report", async () => {
 		const date = "2023-06-23";
 		const response = await request(app).get(`/daily-report?date=${date}`);
 
@@ -94,7 +94,7 @@ describe("Ride API tests", () => {
 		});
 	});
 
-	it("should include ride in the report", async () => {
+	it("should include ride in the daily report", async () => {
 		const date = "2023-06-23";
 
 		const addRideResponse = await request(app)
@@ -120,5 +120,53 @@ describe("Ride API tests", () => {
 		expect(getDailyReportResponse.status).toBe(200);
 		expect(getDailyReportResponse.body.totalCost).toEqual(20);
 		expect(getDailyReportResponse.body.totalDistance).toBeCloseTo(0.271);
+	});
+
+	it("should generate empty report", async () => {
+		const startDate = "2023-05-23";
+		const endDate = "2023-05-29";
+
+		const response = await request(app).get(
+			`/report?startDate=${startDate}&endDate=${endDate}`
+		);
+
+		expect(response.status).toBe(200);
+		expect(response.body).toStrictEqual({
+			totalDistance: 0,
+			totalCost: 0,
+			averageDailyDistance: 0,
+			averageDailyCost: 0,
+		});
+	});
+
+	it("should include ride in the daily report", async () => {
+		const startDate = "2023-05-13";
+		const endDate = "2023-05-14";
+
+		const addRideResponse = await request(app)
+			.post("/rides")
+			.send({
+				startAddress: {
+					latitude: "51.1246336",
+					longitude: "16.9934848",
+				},
+				endAddress: {
+					latitude: "51.1222001",
+					longitude: "16.9932297",
+				},
+				cost: 20,
+				date: startDate,
+			});
+		expect(addRideResponse.status).toBe(201);
+
+		const getDailyReportResponse = await request(app).get(
+			`/report?startDate=${startDate}&endDate=${endDate}`
+		);
+
+		expect(getDailyReportResponse.status).toBe(200);
+		expect(getDailyReportResponse.body.totalCost).toEqual(20);
+		expect(getDailyReportResponse.body.totalDistance).toBeCloseTo(0.271);
+		expect(getDailyReportResponse.body.averageDailyDistance).toEqual(0.1355);
+		expect(getDailyReportResponse.body.averageDailyCost).toEqual(10);
 	});
 });

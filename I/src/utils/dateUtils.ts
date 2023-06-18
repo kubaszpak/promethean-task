@@ -1,6 +1,13 @@
 export const isDateValid = (dateString: string): boolean => {
+	const [year, month, day] = dateString.split("-");
 	const date = new Date(dateString);
-	return date instanceof Date && !isNaN(date.getTime());
+	return (
+		date instanceof Date &&
+		!isNaN(date.getTime()) &&
+		date.getFullYear() === Number(year) &&
+		date.getMonth() + 1 === Number(month) &&
+		date.getDate() === Number(day)
+	);
 };
 
 export const isDateInRange = (

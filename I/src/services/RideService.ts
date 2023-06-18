@@ -12,6 +12,10 @@ export class RideService {
 		this.rides.push(ride);
 	}
 
+	public getRides(): Ride[] {
+		return this.rides;
+	}
+
 	public getDailyReport(date: string) {
 		const ridesOnDate = this.rides.filter((ride) => ride.date === date);
 		return this.getTotalsFromRides(ridesOnDate);
@@ -26,8 +30,8 @@ export class RideService {
 		console.log("numberOfDays: " + numberOfDays);
 		return {
 			...report,
-			distancePerDay: report.totalDistance / numberOfDays,
-			costPerDay: report.totalCost / numberOfDays,
+			averageDailyDistance: report.totalDistance / numberOfDays,
+			averageDailyCost: report.totalCost / numberOfDays,
 		};
 	}
 
@@ -45,6 +49,7 @@ export class RideService {
 }
 
 const calculateDistance = (ride: Ride) => {
+	// https://www.movable-type.co.uk/scripts/latlong.html
 	const lat1 = Number(ride.startAddress.latitude);
 	const lat2 = Number(ride.endAddress.latitude);
 
