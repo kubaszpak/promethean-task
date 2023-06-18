@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DailyReportSchema, RideSchema } from "../models/Ride";
+import { DailyReportSchema, ReportSchema, RideSchema } from "../models/Ride";
 import { RideService } from "../services/RideService";
 import { isDateValid } from "../utils/dateUtils";
 
@@ -30,6 +30,22 @@ export class RideController {
 				return res.status(400).send("Invalid date");
 			}
 			const report = this.rideService.getDailyReport(date);
+			return res.status(200).json(report);
+		} catch (err) {
+			return res.status(400).json(err);
+		}
+	}
+
+	report(req: Request, res: Response, next: NextFunction) {
+		try {
+			const { startDate, endDate } = ReportSchema.parse(req.query);
+			if (!isDateValid(startDate) || !isDateValid(endDate)) {
+				return res.status(400).send("Invalid date");
+			}
+			if (startDate > endDate) {
+				return res.status(400).send("Invalid date range");
+			}
+			const report = this.rideService.getReport(startDate, endDate);
 			return res.status(200).json(report);
 		} catch (err) {
 			return res.status(400).json(err);

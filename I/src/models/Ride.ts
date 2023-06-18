@@ -20,6 +20,15 @@ export const DailyReportSchema = z.object({
 	date: z.string().regex(simpleDateRegex, { message: "Invalid date format" }),
 });
 
+export const ReportSchema = z.object({
+	startDate: z
+		.string()
+		.regex(simpleDateRegex, { message: "Invalid date format" }),
+	endDate: z
+		.string()
+		.regex(simpleDateRegex, { message: "Invalid date format" }),
+});
+
 export type LatLng = z.infer<typeof LatLngSchema>;
 
 export type Ride = z.infer<typeof RideSchema>;

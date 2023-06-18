@@ -21,4 +21,8 @@ app.get("/daily-report", (req: Request, res: Response, next: NextFunction) => {
 	rideController.dailyReport(req, res, next);
 });
 
+app.get("/report", (req: Request, res: Response, next: NextFunction) => {
+	rideController.report(req, res, next);
+});
+
 export default app;

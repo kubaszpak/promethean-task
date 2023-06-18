@@ -1,4 +1,5 @@
 import { Ride } from "../models/Ride";
+import { getNumberOfDays, isDateInRange } from "../utils/dateUtils";
 
 export class RideService {
 	private rides: Ride[];
@@ -13,11 +14,29 @@ export class RideService {
 
 	public getDailyReport(date: string) {
 		const ridesOnDate = this.rides.filter((ride) => ride.date === date);
+		return this.getTotalsFromRides(ridesOnDate);
+	}
+
+	public getReport(startDate: string, endDate: string) {
+		const ridesInRange = this.rides.filter((ride) =>
+			isDateInRange(ride.date, startDate, endDate)
+		);
+		const report = this.getTotalsFromRides(ridesInRange);
+		const numberOfDays = getNumberOfDays(startDate, endDate);
+		console.log("numberOfDays: " + numberOfDays);
+		return {
+			...report,
+			distancePerDay: report.totalDistance / numberOfDays,
+			costPerDay: report.totalCost / numberOfDays,
+		};
+	}
+
+	private getTotalsFromRides(rides: Ride[]) {
 		const report = {
 			totalDistance: 0,
 			totalCost: 0,
 		};
-		for (const ride of ridesOnDate) {
+		for (const ride of rides) {
 			report.totalDistance += calculateDistance(ride);
 			report.totalCost += ride.cost;
 		}
