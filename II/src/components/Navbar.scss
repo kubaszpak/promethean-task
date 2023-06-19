@@ -1,0 +1,33 @@
+.navbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px;
+	min-height: 5rem;
+}
+
+.user {
+	display: flex;
+	gap: 1rem;
+	align-items: center;
+}
+
+.popup-menu {
+	position: absolute;
+	z-index: 2;
+	transform: scale(0);
+	transform-origin: top left;
+	padding: 1rem;
+	background: #fff;
+	border-radius: 0.5rem;
+
+	transition: transform 0.2s;
+
+	&.shown {
+		transform: scale(1);
+	}
+}
+
+.logo {
+	height: 3rem;
+}
